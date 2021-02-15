@@ -158,20 +158,23 @@ function App() {
         <Col>
         <h1>Data</h1>
         <h2>IMU</h2>
-        <p>X: {accXValues[index*20]}, Y: {accYValues[index*20]}, Z: {accZValues[index*20]}</p>
         <h3>Gyro</h3>
-        <p>X: {gyroXValues[index]}, Y: {gyroYValues[index]}, Z: {gyroZValues[index]}</p>
+        <p>X: {gyroXValues[index]}<br />Y: {gyroYValues[index]}<br />Z: {gyroZValues[index]}</p>
         <h3>Acceleration</h3>
+        <p>X: {accXValues[index*20]}<br />Y: {accYValues[index*20]}<br />Z: {accZValues[index*20]}</p>
         <h2>GPS</h2>
-        <p>Lat: {latValues[index]} Long: {longValues[index]}</p>
+        <p>Lat: {latValues[index]}<br />Long: {longValues[index]}</p>
         </Col>
 
       </Row>
       <Row>
+        
         <Col>
+          <br />
           <button type="button" className="btn btn-primary" onClick={handleRestartClick}>From start</button>
         </Col>
         <Col>
+          <br />
           {playing? <Pause onPlayerClick={handlePlayerClick} /> : <Play onPlayerClick={handlePlayerClick} />}
         </Col>
       </Row>
