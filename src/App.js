@@ -52,12 +52,12 @@ function App() {
   const [long, setLong] = useState(-0.09)
   const [index, setIndex] = useState(0)
   const [lastIndex, setLastIndex] = useState(0)
-  let acc_x_values = []
-  let acc_y_values = []
-  let acc_z_values = []
-  let gyro_x_values = []
-  let gyro_y_values = []
-  let gyro_z_values = []
+  const [accXValues,setAccXValues] = useState([])
+  const [accYValues,setAccYValues] = useState([])
+  const [accZValues,setAccZValues] = useState([])
+  const [gyroXValues,setGyroXValues] = useState([])
+  const [gyroYValues,setGyroYValues] = useState([])
+  const [gyroZValues,setGyroZValues] = useState([])
   const [latValues,setLatValues] = useState([])
   const [longValues,setLongValues] = useState([])
   useEffect(() => {
@@ -93,32 +93,33 @@ function App() {
       </Row>
       <Row>
         <Col><CSVReader onFileLoaded={(data, fileInfo) => {
+            let GPSElementCounter = 0
             data.forEach(element => {
               let measurementValue = Number.parseFloat(element[2])
               switch(element[1]){
                 case "1":
                   // gyro_x
-                  gyro_x_values.push(measurementValue)
+                  setGyroXValues(gyroXValues => gyroXValues.concat(measurementValue))
                   break
                 case "2":
                   // gyro_y
-                  gyro_y_values.push(measurementValue)
+                  setGyroYValues(gyroYValues => gyroYValues.concat(measurementValue))
                   break
                 case "3":
                   // gyro_z
-                  gyro_z_values.push(measurementValue)
+                  setGyroZValues(gyroZValues => gyroZValues.concat(measurementValue))
                   break
                 case "4":
                   // acc_x
-                  acc_x_values.push(measurementValue)
+                  setAccXValues(accXValues => accXValues.concat(measurementValue))
                   break
                 case "5":
                   // acc_y
-                  acc_y_values.push(measurementValue)
+                  setAccYValues(accYValues => accYValues.concat(measurementValue))
                   break
                 case "6":
                   // acc_z
-                  acc_z_values.push(measurementValue)
+                  setAccZValues(accZValues => accZValues.concat(measurementValue))
                   break
                 case "7":
                   // lat
@@ -126,13 +127,14 @@ function App() {
                   break
                 case "8":
                   // long
+                  GPSElementCounter++
                   setLongValues(longValues => longValues.concat(measurementValue))
                   break   
                 default:
                   break
               }
             });
-            setLastIndex(acc_z_values.length)
+            setLastIndex(GPSElementCounter)
           }}
           /></Col>
       </Row>
@@ -140,7 +142,7 @@ function App() {
 
         <Col>
         { latValues[index] && longValues[index] &&
-        <MapContainer style={{height: 300, width: 300}} center={[latValues[index],longValues[index]]} zoom={13} scrollWheelZoom={false}>
+        <MapContainer style={{height: 600, width: 600}} center={[latValues[index],longValues[index]]} zoom={13} scrollWheelZoom={false}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -152,6 +154,16 @@ function App() {
             </Marker>
         </MapContainer>
         }  
+        </Col>
+        <Col>
+        <h1>Data</h1>
+        <h2>IMU</h2>
+        <p>X: {accXValues[index*20]}, Y: {accYValues[index*20]}, Z: {accZValues[index*20]}</p>
+        <h3>Gyro</h3>
+        <p>X: {gyroXValues[index]}, Y: {gyroYValues[index]}, Z: {gyroZValues[index]}</p>
+        <h3>Acceleration</h3>
+        <h2>GPS</h2>
+        <p>Lat: {latValues[index]} Long: {longValues[index]}</p>
         </Col>
 
       </Row>
